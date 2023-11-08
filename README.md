@@ -1,6 +1,6 @@
 # Template for a process to be deployed in the data cage
 
-This is a sample project with a representative set of resources to deploy a data processing algorithm in a Datavillage cage.
+This is a sample project with a representative set of resources to deploy a data processing algorithm in a Datavillage cage accessing consented personal data.
 
 __TL;DR__ : clone this repo and edit the `process.py` file
 
@@ -8,14 +8,12 @@ __TL;DR__ : clone this repo and edit the `process.py` file
 ## Template Use case
 
 To make this template closer to a real use case,
-it implements a very simple use case of an algorithm that is waiting for an event of type 'QUOTE' and when received does the following:
+it implements a very simple use case of an algorithm that is waiting for an event of type 'ARTISTS' and when received does the following:
  1. push an audit log (long duration logs) via the "audit_log" function to preserve that this event occured for a long period
- 2. read an excel file that was uploaded in the collaboration space at path 'STOCK_XL_PATH' and containing a list of stock market shares.
- 3. reach an external financial API using 'FMP_API_KEY' authentication key to get the latest quotes for the previously listed stock market shares.
- 4. build a new excel file containing the quotes associated to each symbol and store it '/resources/outputs/stocks.xlsx' for possible retrieval through the collaboration space output API.
- 5. store the quotes in an RDF format and push it to the SOLID pod of all end users connected to the collaboration space (if any).
+ 2. read consented personal data from user's POD
+ 3. build a new excel file containing the aggregated list of artists from all users and store it '/resources/outputs/artists.csv' for possible retrieval through the collaboration space output API.
 
-All these steps are defined in the "update_quote_event_processor" function of the process.py file.
+All these steps are defined in the "update_artists_event_processor" function of the process.py file.
 Simply adapt this function when addressing your own use case
 
 
@@ -53,12 +51,6 @@ When running the docker container in a datavillage collaboration space, the foll
 | REDIS_SERVICE_HOST |  The IP address on which the REDIS server (and its event queue) is hosted     |
 | REDIS_SERVICE_PORT |  The PORT used by the REDIS server    |
 
-In addition, all environment variables that you define in the collaboration space are also available.
-For instance the two following variables are provided and used for the stock quote demo.
-| variable | description |
-|----------|-------------|
-| STOCK_XL_PATH | OPTIONAL; used in the stock quote demo.  Is the path to an xlsx file with a "symbol" column, listing the stocks that we want to get quotes for |
-| FMP_API_KEY | OPTIONAL; used in the stock quote demo.  API key to financialmodelingprep.com api |
 
 The process execution is event-driven : triggering events are sent on a local Redis queue; the executable should 
 subscribe to that queue and handle events appropriately.

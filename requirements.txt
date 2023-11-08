@@ -3,4 +3,3 @@
 dv-utils>=0.2.1
 pandas
 openpyxl
-delta_sharing @ git+https://github.com/delta-io/delta-sharing@main#&subdirectory=python
